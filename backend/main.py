@@ -1,3 +1,6 @@
+from database import engine, SessionLocal, Base, get_db
+
+
 # =========================================================================
 # EDUPULSE ERP BACKEND - PRODUCTION-READY FASTAPI + SQLALCHEMY + POSTGRESQL
 # =========================================================================
@@ -85,26 +88,7 @@ def decode_access_token(token: str) -> dict:
 # =========================================================================
 # DATABASE CONFIGURATION
 # =========================================================================
-engine = create_engine(
-    settings.database_url,
-    poolclass=QueuePool,
-    pool_size=20,
-    max_overflow=10,
-    pool_recycle=3600,
-    pool_pre_ping=True,
-    echo=settings.fastapi_debug
-)
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
-
-def get_db():
-    """Dependency to get database session"""
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 # =========================================================================
 # SQLALCHEMY MODELS
