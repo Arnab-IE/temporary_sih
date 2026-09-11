@@ -483,7 +483,7 @@ async def get_current_faculty(
     return faculty
 
     
-    async def get_current_admin(
+async def get_current_admin(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db)
 ) -> Admin:
