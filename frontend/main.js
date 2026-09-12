@@ -1,4 +1,7 @@
-﻿// =========================================================================
+const API_BASE_URL = "https://temporary-sih-5.onrender.com"; // Replace with your exact Render backend URL
+
+
+// =========================================================================
         // PROTOTYPE STATE & IN-MEMORY DATABASE MODEL
         // =========================================================================
         const state = {
@@ -76,7 +79,7 @@
             };
             const hintMap = {
                 student: 'STU202601 (Alex Morgan)',
-                faculty: 'FAC101 (Dr. Robert Vance)',
+                faculty: 'FAC101 (Dr. Robert Vance)',/
                 admin: 'ADMIN-01 (System Administrator)'
             };
 
