@@ -29,21 +29,21 @@ logger = logging.getLogger(__name__)
 # =========================================================================
 # ENVIRONMENT CONFIGURATION (Pydantic Settings)
 # =========================================================================
-class Settings(BaseSettings):
+   class Settings(BaseSettings):
     """Application settings loaded from .env file"""
     database_url: str
     secret_key: str
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
-    cors_origins: List[str] = ["http://localhost:3000", "http://localhost:8080", "http://127.0.0.1:5500"]
+    cors_origins: List[str] = [
+        "http://localhost:3000", 
+        "http://localhost:8080", 
+        "http://127.0.0.1:5500",
+        "https://academicerp.netlify.app"
+    ]
     app_name: str = "EduPulse ERP"
     app_version: str = "1.0.0"
     fastapi_debug: bool = False
-    
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
 
 settings = Settings()
 
@@ -1262,14 +1262,6 @@ def health_check():
 # STARTUP & SHUTDOWN EVENTS
 # =========================================================================
 
-@app.on_event("startup")
-async def startup_event():
-    """Initialize database on startup"""
-    logger.info(f"Starting {settings.app_name} v{settings.app_version}")
-    db_info = settings.database_url.split("@")[1] if "@" in settings.database_url else "unknown"
-    logger.info(f"Database: {db_info}")
-    logger.info(f"CORS Origins: {settings.cors_origins}")
-
 
 @app.on_event("shutdown")
 async def shutdown_event():
@@ -1288,7 +1280,10 @@ if __name__ == "__main__":
 
 @app.on_event("startup")
 async def startup_event():
+    """Initialize app and default admin user on startup"""
     logger.info(f"Starting {settings.app_name} v{settings.app_version}")
+    logger.info(f"CORS Origins: {settings.cors_origins}")
+    
     db = SessionLocal()
     try:
         admin_email = "admin@edupulse.com"
@@ -1299,8 +1294,9 @@ async def startup_event():
                 hashed_password=get_password_hash("Admin@123456")
             ))
             db.commit()
-            logger.info("Default admin user created: admin@edupulse.com / Admin@123456")
+            logger.info("Default admin user created")
     finally:
         db.close()
+
 
 
